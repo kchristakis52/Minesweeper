@@ -5,29 +5,25 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Queue;
 import java.util.Scanner;
 
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
-
 public class HelloController {
-    private boolean correct= false;
+    private Game current_game;
+    private Queue<Game> past_games;
+
+    private boolean correct = false;
     public MenuItem menu_start;
     private int minesNum;
     private int difficulty;
@@ -51,7 +47,7 @@ public class HelloController {
     private AnchorPane anchor;
 
     public void upd_mines_marked(int num) {
-        Marked_mines.setText(String.valueOf(num));
+        Marked_mines.setText("Marked mines: "+String.valueOf(num));
     }
 
     @FXML
@@ -76,6 +72,12 @@ public class HelloController {
     }
 
     @FXML
+    private void menu_solution_action(ActionEvent actionEvent) {
+        current_game.reveal();
+    }
+
+
+    @FXML
     private void menu_load_action(ActionEvent actionEvent) {
 
         Stage stage = (Stage) anchor.getScene().getWindow();
@@ -96,30 +98,51 @@ public class HelloController {
             if (!(difficulty == 1 && (minesNum <= 11 && minesNum >= 9) && (time >= 120 && time <= 180) && superBomb == 0) && !(difficulty == 2 && (minesNum <= 45 && minesNum >= 35) && (time >= 240 && time <= 360) && (superBomb == 0 || superBomb == 1))) {
                 throw new InvalidValueException("Invalid values");
             }
-            correct=true;
+            correct = true;
             total_mines.setText("Total Mines: " + String.valueOf(minesNum));
             time_left.setText("Time left: " + String.valueOf(time));
             Marked_mines.setText("Marked mines: ");
         } catch (Exception e) {
             total_mines.setText("Error: Invalid values");
-            correct=false;
+            correct = false;
         }
     }
 
     @FXML
     public void menu_start_action(ActionEvent actionEvent) {
         if (correct) {
-            Game game = new Game(difficulty, minesNum, time);
-            game.countAdjMines();
-            Marked_mines.setText("Marked mines: " + String.valueOf(game.getMinesMarked()));
-            for (int x = 0; x < game.getSize(); x++) {
-                for (int y = 0; y < game.getSize(); y++) {
-                    game.grid[x][y].setPrefSize(50, 50);
-                    minesgrid.add(game.grid[x][y], x, y);
+            current_game = new Game(difficulty, minesNum, time,superBomb, this);
+            current_game.countAdjMines();
+            Marked_mines.setText("Marked mines: " + String.valueOf(current_game.getMinesMarked()));
+            for (int x = 0; x < current_game.getSize(); x++) {
+                for (int y = 0; y < current_game.getSize(); y++) {
+                    current_game.grid[x][y].setPrefSize(50, 50);
+                    minesgrid.add(current_game.grid[x][y], x, y);
 
                 }
             }
 
         }
+    }
+    private void init_fields(){
+        this.correct=false;
+
+    }
+
+    public void game_lost() {
+        total_mines.setText("");
+        Marked_mines.setText("You Lost");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("You lost");
+        alert.setHeaderText("Information Alert");
+        String s ="This is an example of JavaFX 8 Dialogs... ";
+        alert.setContentText(s);
+        alert.show();
+
+    }
+
+    public void game_won() {
+        Marked_mines.setText("You Won");
+
     }
 }

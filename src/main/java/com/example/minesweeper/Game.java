@@ -1,11 +1,5 @@
 package com.example.minesweeper;
 
-import com.almasb.fxgl.core.collection.Array;
-import com.almasb.fxgl.entity.level.tiled.Tile;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,13 +12,16 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Game {
     private int difficulty;
 
+
     public int getMinesMarked() {
         return minesMarked;
     }
 
     public void setMinesMarked(int minesMarked) {
         this.minesMarked = minesMarked;
+        helloController.upd_mines_marked(this.minesMarked);
     }
+
 
     public int getWinning() {
         return winning;
@@ -34,20 +31,38 @@ public class Game {
     private int minesMarked;
     private int minesNum;
     private int time;
+    private int opened;
+
+
+    private int goal;
+
+
+    private int tries;
     private int size;
-    private HelloController helloController;
+    private final HelloController helloController;
+
+    public Cell[][] getGrid() {
+        return grid;
+    }
+
     public Cell[][] grid;
 
-    public Game(int difficulty, int minesNum, int time) {
+
+    public Game(int difficulty, int minesNum, int time, int supermine, HelloController helloController) {
         this.minesNum = minesNum;
         this.time = time;
+        this.helloController = helloController;
         minesMarked = 0;
-        winning = 2;
+        opened = 0;
+        tries = 0;
+
         if (difficulty == 1) {
             this.size = 9;
         } else if (difficulty == 2) {
             this.size = 16;
         }
+        goal = (int) (Math.pow(size, 2) - minesNum);
+        System.out.print(goal);
         this.grid = new Cell[size][];
         for (int x = 0; x < size; x++) {
             grid[x] = new Cell[size];
@@ -65,10 +80,12 @@ public class Game {
             }
         }
         for (int i = 0; i < minesNum; i++) {
-            int index = ThreadLocalRandom.current().nextInt(0, tobe.size() + 1);
+            int index = ThreadLocalRandom.current().nextInt(0, tobe.size());
             tobe.get(index).setHasMine();
+            if (supermine == 1 && i == 0) tobe.get(index).setSuperMine();
             tobe.remove(index);
         }
+
         File file = new File("C:\\Users\\kxris\\Desktop\\Medialab\\Mines.txt");
         try {
             Files.deleteIfExists(file.toPath());
@@ -91,17 +108,52 @@ public class Game {
 
     }
 
+    public void reveal() {
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+                if (grid[x][y].gethasMine()) {
+                    grid[x][y].open();
+
+                }
+            }
+        }
+    }
+
+    public int getTries() {
+        return tries;
+    }
+
     public void win() {
-        winning = 1;
+        helloController.game_won();
     }
 
     public void lost() {
-        winning = 0;
-
+        helloController.game_lost();
     }
 
     public int getSize() {
         return size;
+    }
+
+    public int getGoal() {
+        return goal;
+    }
+
+
+    public void incTries() {
+        tries++;
+    }
+
+    public void incOpened() {
+        opened++;
+    }
+
+    public void subOpened() {
+        opened--;
+    }
+
+    public int getOpened() {
+        return opened;
     }
 
     public void countAdjMines() {

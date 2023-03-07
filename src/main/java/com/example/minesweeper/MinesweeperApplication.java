@@ -16,7 +16,7 @@ public class MinesweeperApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 720, 720);
         stage.setTitle("Medialab Minesweeper");
         stage.setScene(scene);
-        stage.setResizable(false);
+        //stage.setResizable(false);
         stage.show();
     }
 
