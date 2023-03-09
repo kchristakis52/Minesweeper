@@ -17,7 +17,7 @@ public class Cell extends StackPane {
     private final Game game;
 
     public Text text = new Text();
-    private Rectangle rectangle = new Rectangle(55, 55);
+    private final Rectangle rectangle = new Rectangle(55, 55);
 
     private boolean hasMine;
     private boolean revealed;
@@ -47,8 +47,8 @@ public class Cell extends StackPane {
         text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
         rectangle.setFill(Color.GREEN);
         if (game.getSize() == 16) {
-            rectangle.setHeight(40);
-            rectangle.setWidth(40);
+            rectangle.setHeight(50);
+            rectangle.setWidth(50);
         }
         super.getChildren().addAll(rectangle, text);
         setOnMouseClicked(e -> {
@@ -85,20 +85,22 @@ public class Cell extends StackPane {
         hinted = true;
         if (adjMines == 0) {
             rectangle.setFill(Color.GRAY);
+            game.incOpened();
         } else if (hasMine) {
             rectangle.setFill(Color.GRAY);
             text.setText("X");
         } else {
             text.setText(String.valueOf(adjMines));
             rectangle.setFill(Color.GRAY);
+            game.incOpened();
         }
     }
 
     public void open() {
         if (revealed) return;
         revealed = true;
-
         if (adjMines == 0) {
+            game.incOpened();
             for (int xoff = -1; xoff <= 1; xoff++) {
                 for (int yoff = -1; yoff <= 1; yoff++) {
                     int newx = x + xoff;
@@ -106,9 +108,11 @@ public class Cell extends StackPane {
                     if (newx >= 0 && newx < game.getSize() && newy >= 0 && newy < game.getSize() && !(xoff == 0 && yoff == 0)) {
                         rectangle.setFill(Color.GRAY);
                         game.grid[newx][newy].open();
-                        game.incOpened();
                     }
                 }
+            }
+            if (game.getOpened() >= game.getGoal()) {
+                game.win();
             }
         } else if (hasMine) {
             rectangle.setFill(Color.RED);
@@ -117,10 +121,11 @@ public class Cell extends StackPane {
             text.setText(String.valueOf(adjMines));
             rectangle.setFill(Color.GRAY);
             game.incOpened();
+            if (game.getOpened() >= game.getGoal()) {
+                game.win();
+            }
         }
-        if(game.getOpened() >= game.getGoal()){
-            game.win();
-        }
+
     }
 
     public int getX() {
@@ -139,13 +144,6 @@ public class Cell extends StackPane {
         return this.hasMine;
     }
 
-    public boolean getrevealed() {
-        return this.revealed;
-    }
-
-    public void setrevealed(boolean a) {
-        this.revealed = a;
-    }
 
     public void setHasMine() {
         this.hasMine = !hasMine;

@@ -16,13 +16,12 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Queue;
 import java.util.Scanner;
+
 
 public class HelloController {
     private Game current_game;
-    private Queue<Game> past_games;
-
+    private Fifo<PastGame> past_games= new Fifo<>(5) ;
     private boolean correct = false;
     public MenuItem menu_start;
     private int minesNum;
@@ -36,18 +35,12 @@ public class HelloController {
     @FXML
     private Label total_mines;
     @FXML
-    private Label time_left;
-
-
-    @FXML
-    private MenuItem menu_exit;
-    @FXML
-    private MenuItem menu_load;
+    public Label time_left;
     @FXML
     private AnchorPane anchor;
 
     public void upd_mines_marked(int num) {
-        Marked_mines.setText("Marked mines: "+String.valueOf(num));
+        Marked_mines.setText("Marked mines: " + num);
     }
 
     @FXML
@@ -63,7 +56,7 @@ public class HelloController {
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
 
-            stage.setTitle("ABC");
+            stage.setTitle("Choose scenario");
             stage.setScene(new Scene(root1));
             stage.show();
         } catch (IOException e) {
@@ -99,9 +92,9 @@ public class HelloController {
                 throw new InvalidValueException("Invalid values");
             }
             correct = true;
-            total_mines.setText("Total Mines: " + String.valueOf(minesNum));
-            time_left.setText("Time left: " + String.valueOf(time));
-            Marked_mines.setText("Marked mines: ");
+            total_mines.setText("Total Mines: " + minesNum);
+            time_left.setText("Time left: " + time);
+            Marked_mines.setText("");
         } catch (Exception e) {
             total_mines.setText("Error: Invalid values");
             correct = false;
@@ -111,38 +104,48 @@ public class HelloController {
     @FXML
     public void menu_start_action(ActionEvent actionEvent) {
         if (correct) {
-            current_game = new Game(difficulty, minesNum, time,superBomb, this);
+            current_game = new Game(difficulty, minesNum, time, superBomb, this);
             current_game.countAdjMines();
-            Marked_mines.setText("Marked mines: " + String.valueOf(current_game.getMinesMarked()));
+            Marked_mines.setText("Marked mines: " + current_game.getMinesMarked());
             for (int x = 0; x < current_game.getSize(); x++) {
                 for (int y = 0; y < current_game.getSize(); y++) {
                     current_game.grid[x][y].setPrefSize(50, 50);
                     minesgrid.add(current_game.grid[x][y], x, y);
-
                 }
             }
-
         }
-    }
-    private void init_fields(){
-        this.correct=false;
 
     }
+
+
 
     public void game_lost() {
-        total_mines.setText("");
-        Marked_mines.setText("You Lost");
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("You lost");
-        alert.setHeaderText("Information Alert");
-        String s ="This is an example of JavaFX 8 Dialogs... ";
-        alert.setContentText(s);
-        alert.show();
-
+        alert.setTitle("Sorry");
+        alert.setHeaderText(null);
+        alert.setContentText("You lost... Try again!");
+        alert.showAndWait();
+        past_games.add(new PastGame(current_game, false));
+        init_GUI();
     }
 
     public void game_won() {
-        Marked_mines.setText("You Won");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Congratulations!");
+        alert.setHeaderText(null);
+        alert.setContentText("You won!");
+        alert.showAndWait();
+        past_games.add(new PastGame(current_game, true));
+        init_GUI();
+
+    }
+
+    private void init_GUI() {
+        minesgrid.getChildren().clear();
+        current_game = null;
+        total_mines.setText("Total Mines: " + minesNum);
+        time_left.setText("Time left: " + time);
+        Marked_mines.setText("");
 
     }
 }

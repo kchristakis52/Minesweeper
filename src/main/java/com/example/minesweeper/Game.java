@@ -1,5 +1,7 @@
 package com.example.minesweeper;
 
+import javafx.animation.AnimationTimer;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,40 +13,17 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Game {
     private int difficulty;
-
-
-    public int getMinesMarked() {
-        return minesMarked;
-    }
-
-    public void setMinesMarked(int minesMarked) {
-        this.minesMarked = minesMarked;
-        helloController.upd_mines_marked(this.minesMarked);
-    }
-
-
-    public int getWinning() {
-        return winning;
-    }
-
-    private int winning;
+    private AnimationTimer timer;
+    private boolean restartScheduled;
+    private long animationStart;
     private int minesMarked;
-    private int minesNum;
-    private int time;
+    private final int minesNum;
+    private final int time;
     private int opened;
-
-
-    private int goal;
-
-
+    private final int goal;
     private int tries;
     private int size;
     private final HelloController helloController;
-
-    public Cell[][] getGrid() {
-        return grid;
-    }
-
     public Cell[][] grid;
 
 
@@ -62,7 +41,7 @@ public class Game {
             this.size = 16;
         }
         goal = (int) (Math.pow(size, 2) - minesNum);
-        System.out.print(goal);
+
         this.grid = new Cell[size][];
         for (int x = 0; x < size; x++) {
             grid[x] = new Cell[size];
@@ -101,6 +80,26 @@ public class Game {
             }
             //myWriter.write("Files in Java might be tricky, but it is fun enough!\n");
             myWriter.close();
+            timer = new AnimationTimer() {
+                public void start() {
+                    super.start();
+                    restartScheduled = true;
+                }
+
+                @Override
+                public void handle(long now) {
+                    if (restartScheduled) {
+                        animationStart = now;
+                        restartScheduled = false;
+                    }
+                    now = ((now - animationStart) / 1000000000L);
+
+                    helloController.time_left.setText("Time left: " + String.valueOf(time - now));
+                    if (time - now <= 0) lost();
+
+                }
+            };
+            timer.start();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -122,12 +121,31 @@ public class Game {
     public int getTries() {
         return tries;
     }
+    public int getTime() {
+        return time;
+    }
+    public int getMinesMarked() {
+        return minesMarked;
+    }
+
+    public void setMinesMarked(int minesMarked) {
+        this.minesMarked = minesMarked;
+        helloController.upd_mines_marked(this.minesMarked);
+    }
+
+    public int gettotalMines() {
+        return minesNum;
+    }
 
     public void win() {
+        timer.stop();
         helloController.game_won();
     }
 
     public void lost() {
+        timer.stop();
+        timer = null;
+
         helloController.game_lost();
     }
 
