@@ -73,6 +73,7 @@ public class Cell extends StackPane {
                     if (i != y) game.grid[x][i].hint();
                 }
             }
+            if(game.getMinesMarked()>=game.gettotalMines()) return;
             flagged = true;
             text.setText("X");
             game.setMinesMarked(game.getMinesMarked() + 1);

@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 
-public class HelloController {
+public class MinesweeperController {
     private Game current_game;
     private Fifo<PastGame> past_games= new Fifo<>(5) ;
     private boolean correct = false;

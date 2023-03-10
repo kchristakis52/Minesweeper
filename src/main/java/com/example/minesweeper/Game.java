@@ -23,14 +23,14 @@ public class Game {
     private final int goal;
     private int tries;
     private int size;
-    private final HelloController helloController;
+    private final MinesweeperController minesweeperController;
     public Cell[][] grid;
 
 
-    public Game(int difficulty, int minesNum, int time, int supermine, HelloController helloController) {
+    public Game(int difficulty, int minesNum, int time, int supermine, MinesweeperController minesweeperController) {
         this.minesNum = minesNum;
         this.time = time;
-        this.helloController = helloController;
+        this.minesweeperController = minesweeperController;
         minesMarked = 0;
         opened = 0;
         tries = 0;
@@ -94,7 +94,7 @@ public class Game {
                     }
                     now = ((now - animationStart) / 1000000000L);
 
-                    helloController.time_left.setText("Time left: " + String.valueOf(time - now));
+                    minesweeperController.time_left.setText("Time left: " + String.valueOf(time - now));
                     if (time - now <= 0) lost();
 
                 }
@@ -130,7 +130,7 @@ public class Game {
 
     public void setMinesMarked(int minesMarked) {
         this.minesMarked = minesMarked;
-        helloController.upd_mines_marked(this.minesMarked);
+        minesweeperController.upd_mines_marked(this.minesMarked);
     }
 
     public int gettotalMines() {
@@ -139,14 +139,14 @@ public class Game {
 
     public void win() {
         timer.stop();
-        helloController.game_won();
+        minesweeperController.game_won();
     }
 
     public void lost() {
         timer.stop();
         timer = null;
 
-        helloController.game_lost();
+        minesweeperController.game_lost();
     }
 
     public int getSize() {

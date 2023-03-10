@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane fx:id="anchor" prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.minesweeper.Createpopup">
+<AnchorPane fx:id="anchor" prefHeight="360.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.minesweeper.Createpopup">
    <children>
-      <GridPane layoutX="179.0" layoutY="155.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <GridPane alignment="CENTER" layoutX="179.0" layoutY="155.0" prefHeight="493.0" prefWidth="655.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
@@ -31,79 +26,51 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TextField fx:id="scenario" GridPane.columnIndex="1" />
-            <TextField fx:id="mines" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="time" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <CheckBox fx:id="supermine" alignment="CENTER" mnemonicParsing="false" text="Super Mine" GridPane.columnIndex="1" GridPane.rowIndex="3">
-               <font>
-                  <Font size="18.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets left="20.0" />
-               </GridPane.margin>
-            </CheckBox>
-            <Label alignment="CENTER" text="Scenario ID:">
-               <font>
-                  <Font size="24.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
-               </GridPane.margin>
-            </Label>
-            <Label alignment="CENTER" text="Difficulty" GridPane.rowIndex="1">
-               <font>
-                  <Font size="24.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
-               </GridPane.margin>
-            </Label>
-            <Label alignment="CENTER" text="Number of mines:" GridPane.rowIndex="2">
-               <font>
-                  <Font size="24.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
-               </GridPane.margin>
-            </Label>
-            <Label alignment="CENTER" text="Super Mine:" GridPane.rowIndex="3">
-               <font>
-                  <Font size="24.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
-               </GridPane.margin>
-            </Label>
-            <Label alignment="CENTER" text="Time (s):" GridPane.rowIndex="4">
-               <GridPane.margin>
-                  <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
-               </GridPane.margin>
+            <Label text="Total mines" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="25.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <children>
-                  <RadioButton mnemonicParsing="false" text="1">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                     <toggleGroup>
-                        <ToggleGroup fx:id="a" />
-                     </toggleGroup>
-                  </RadioButton>
-                  <RadioButton mnemonicParsing="false" text="2" toggleGroup="$a">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </RadioButton>
-               </children>
-            </HBox>
-            <Button fx:id="ok" mnemonicParsing="false" onAction="#ok_action" text="OK" GridPane.columnIndex="1" GridPane.rowIndex="5">
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-            </Button>
+            <Label text="Total clicks" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label text="Total time" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label text="Winner" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" text="Game 1" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label nodeOrientation="LEFT_TO_RIGHT" text="Game 2" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label nodeOrientation="LEFT_TO_RIGHT" text="Game 3" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label nodeOrientation="LEFT_TO_RIGHT" text="Game 4" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label nodeOrientation="LEFT_TO_RIGHT" text="Game 5" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
          </children>
       </GridPane>
    </children>
