@@ -53,7 +53,7 @@ public class Game {
         }
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
-                grid[x][y] = new Cell(x, y, false, this);
+                grid[x][y] = new Cell(x, y, this);
 
             }
         }

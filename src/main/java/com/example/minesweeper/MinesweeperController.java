@@ -7,10 +7,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -19,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.Scanner;
 
 
@@ -26,7 +25,7 @@ public class MinesweeperController {
     private Game current_game;
     private final Fifo<PastGame> past_games = new Fifo<>(5);
     private boolean correct = false;
-    public MenuItem menu_start;
+
     private int minesNum;
     private int difficulty;
     private int time;
@@ -39,8 +38,7 @@ public class MinesweeperController {
     private Label total_mines;
     @FXML
     public Label time_left;
-    @FXML
-    private AnchorPane anchor;
+
 
     public void upd_mines_marked(int num) {
         Marked_mines.setText("Marked mines: " + num);
@@ -75,14 +73,30 @@ public class MinesweeperController {
 
     @FXML
     private void menu_load_action(ActionEvent actionEvent) {
+        if (current_game != null) return;
+        File selected = null;
 
-        Stage stage = (Stage) anchor.getScene().getWindow();
-        FileChooser fileChooser = new FileChooser();
-        File selected = fileChooser.showOpenDialog(stage);
-        Path path = selected.toPath();
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Choose description");
+        dialog.setHeaderText("Please enter description name");
+        dialog.setContentText("Description name:");
 
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            selected = new File("C:\\Users\\kxris\\Desktop\\Medialab\\" + result.get() + ".txt");
+            if (!selected.exists()) {
+
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("The description file doesn't exist. Previous description was used.");
+                alert.showAndWait();
+                return;
+            }
+        } else return;
         long lines = 0;
         try {
+            Path path = selected.toPath();
 
             lines = Files.lines(path).count();
 
@@ -132,8 +146,8 @@ public class MinesweeperController {
     }
 
     @FXML
-    public void menu_start_action(ActionEvent actionEvent) {
-        if (correct) {
+    private void menu_start_action(ActionEvent actionEvent) {
+        if (correct && current_game == null) {
             current_game = new Game(difficulty, minesNum, time, superBomb, this);
             current_game.countAdjMines();
             Marked_mines.setText("Marked mines: " + current_game.getMinesMarked());
@@ -206,7 +220,7 @@ public class MinesweeperController {
         current_game = null;
         total_mines.setText("Total Mines: " + minesNum);
         time_left.setText("Time left: " + time);
-        Marked_mines.setText("");
+        Marked_mines.setText("Marked mines: ");
 
     }
 }

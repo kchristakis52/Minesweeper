@@ -10,10 +10,13 @@ public class Fifo<E> extends LinkedList<E> {
     public Fifo(int limit) {
         this.limit = limit;
     }
+
     @Override
-    public boolean add(E o){
+    public boolean add(E o) {
         super.add(o);
-        while (size() > limit) { super.remove(); }
+        while (size() > limit) {
+            super.remove();
+        }
         return true;
     }
 }

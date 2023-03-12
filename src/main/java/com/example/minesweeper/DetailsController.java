@@ -17,10 +17,10 @@ public class DetailsController {
             Label totalTime = new Label(String.valueOf(pastGame.getTime()));
             String winnerString = (pastGame.isWin()) ? "You" : "Computer";
             Label winner = new Label(winnerString);
-            totalMines.setFont(new Font("System",24));
-            totalClicks.setFont(new Font("System",24));
-            totalTime.setFont(new Font("System",24));
-            winner.setFont(new Font("System",24));
+            totalMines.setFont(new Font("System", 24));
+            totalClicks.setFont(new Font("System", 24));
+            totalTime.setFont(new Font("System", 24));
+            winner.setFont(new Font("System", 24));
 
             grid.add(totalMines, 1, i);
             grid.add(totalClicks, 2, i);

@@ -17,10 +17,10 @@
         <menus>
           <Menu mnemonicParsing="false" text="Application">
             <items>
-              <MenuItem fx:id="menu_create" mnemonicParsing="false" onAction="#menu_create_action" text="Create" />
-                  <MenuItem fx:id="menu_load" mnemonicParsing="false" onAction="#menu_load_action" text="Load" />
-                  <MenuItem fx:id="menu_start" mnemonicParsing="false" onAction="#menu_start_action" text="Start" />
-                  <MenuItem fx:id="menu_exit" mnemonicParsing="false" onAction="#menu_exit_action" text="Exit" />
+              <MenuItem mnemonicParsing="false" onAction="#menu_create_action" text="Create" />
+                  <MenuItem mnemonicParsing="false" onAction="#menu_load_action" text="Load" />
+                  <MenuItem mnemonicParsing="false" onAction="#menu_start_action" text="Start" />
+                  <MenuItem mnemonicParsing="false" onAction="#menu_exit_action" text="Exit" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Details">
@@ -35,12 +35,12 @@
          <top>
             <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="720.0" spacing="5.0">
                <children>
-                  <Label fx:id="total_mines" contentDisplay="CENTER" prefHeight="100.0" prefWidth="240.0" text="Total mines:">
+                  <Label fx:id="total_mines" contentDisplay="CENTER" prefHeight="100.0" prefWidth="275.0" text="Total mines:">
                      <font>
                         <Font size="28.0" />
                      </font>
                   </Label>
-                  <Label fx:id="Marked_mines" prefHeight="100.0" prefWidth="240.0" text="Marked mines:">
+                  <Label fx:id="Marked_mines" prefHeight="100.0" prefWidth="275.0" text="Marked mines:">
                      <font>
                         <Font size="28.0" />
                      </font></Label>

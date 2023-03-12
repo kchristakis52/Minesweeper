@@ -23,10 +23,16 @@ public class Cell extends StackPane {
     private boolean revealed;
     private boolean flagged;
 
+    /**
+     * @return True if cell contains a Super Mine, False otherwise.
+     */
     public boolean isSuperMine() {
         return superMine;
     }
 
+    /**
+     * The caller cell will now contain a Super Mine
+     */
     public void setSuperMine() {
         this.superMine = true;
     }
@@ -34,10 +40,19 @@ public class Cell extends StackPane {
     private boolean superMine;
     private boolean hinted;
 
-    public Cell(int x, int y, boolean hasMine, Game game) {
+    /**
+     * Creates a new empty cell, sets its size to the correct value
+     * depending on the grid size and defines how the player will
+     * interact with the cell.
+     *
+     * @param x    Column number
+     * @param y    Row number
+     * @param game The Game object that created this Cell object
+     */
+    public Cell(int x, int y, Game game) {
         this.x = x;
         this.y = y;
-        this.hasMine = hasMine;
+        this.hasMine = false;
         this.game = game;
         this.superMine = false;
         this.revealed = false;
@@ -73,7 +88,7 @@ public class Cell extends StackPane {
                     if (i != y) game.getGrid()[x][i].hint();
                 }
             }
-            if(game.getMinesMarked()>=game.gettotalMines()) return;
+            if (game.getMinesMarked() >= game.gettotalMines()) return;
             flagged = true;
             text.setText("X");
             game.setMinesMarked(game.getMinesMarked() + 1);
@@ -97,7 +112,10 @@ public class Cell extends StackPane {
         }
     }
 
-    public void spoil(){
+    /**
+     * Reveals the caller cell, which contains a mine
+     */
+    public void spoil() {
         rectangle.setFill(Color.RED);
 
     }
@@ -134,16 +152,25 @@ public class Cell extends StackPane {
 
     }
 
-
+    /**
+     * Sets the field of caller Cell equal to parameter mines
+     *
+     * @param mines Number of mines adjacent to this cell
+     */
     public void setAdjMines(int mines) {
         adjMines = mines;
     }
 
+    /**
+     * @return True if caller Cell contains a Mine, False otherwise.
+     */
     public boolean gethasMine() {
         return this.hasMine;
     }
 
-
+    /**
+     * The caller Cell will now contain a mine
+     */
     public void setHasMine() {
         this.hasMine = true;
     }
