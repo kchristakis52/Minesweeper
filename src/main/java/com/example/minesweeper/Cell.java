@@ -16,7 +16,7 @@ public class Cell extends StackPane {
     private int adjMines;
     private final Game game;
 
-    public Text text = new Text();
+    private final Text text = new Text();
     private final Rectangle rectangle = new Rectangle(55, 55);
 
     private boolean hasMine;
@@ -69,8 +69,8 @@ public class Cell extends StackPane {
         } else {
             if (superMine && game.getTries() <= 4) {
                 for (int i = 0; i < 16; i++) {
-                    if (i != x) game.grid[i][y].hint();
-                    if (i != y) game.grid[x][i].hint();
+                    if (i != x) game.getGrid()[i][y].hint();
+                    if (i != y) game.getGrid()[x][i].hint();
                 }
             }
             if(game.getMinesMarked()>=game.gettotalMines()) return;
@@ -97,7 +97,12 @@ public class Cell extends StackPane {
         }
     }
 
-    public void open() {
+    public void spoil(){
+        rectangle.setFill(Color.RED);
+
+    }
+
+    private void open() {
         if (revealed) return;
         revealed = true;
         if (adjMines == 0) {
@@ -108,7 +113,7 @@ public class Cell extends StackPane {
                     int newy = y + yoff;
                     if (newx >= 0 && newx < game.getSize() && newy >= 0 && newy < game.getSize() && !(xoff == 0 && yoff == 0)) {
                         rectangle.setFill(Color.GRAY);
-                        game.grid[newx][newy].open();
+                        game.getGrid()[newx][newy].open();
                     }
                 }
             }
@@ -117,7 +122,7 @@ public class Cell extends StackPane {
             }
         } else if (hasMine) {
             rectangle.setFill(Color.RED);
-            //game.lost();
+            game.lost();
         } else {
             text.setText(String.valueOf(adjMines));
             rectangle.setFill(Color.GRAY);
@@ -129,13 +134,6 @@ public class Cell extends StackPane {
 
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
 
     public void setAdjMines(int mines) {
         adjMines = mines;
@@ -147,7 +145,7 @@ public class Cell extends StackPane {
 
 
     public void setHasMine() {
-        this.hasMine = !hasMine;
+        this.hasMine = true;
     }
 
 

@@ -12,7 +12,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 
 public class Game {
-    private int difficulty;
+
     private AnimationTimer timer;
     private boolean restartScheduled;
     private long animationStart;
@@ -24,7 +24,12 @@ public class Game {
     private int tries;
     private int size;
     private final MinesweeperController minesweeperController;
-    public Cell[][] grid;
+
+    public Cell[][] getGrid() {
+        return grid;
+    }
+
+    private Cell[][] grid;
 
 
     public Game(int difficulty, int minesNum, int time, int supermine, MinesweeperController minesweeperController) {
@@ -95,7 +100,7 @@ public class Game {
                     now = ((now - animationStart) / 1000000000L);
 
                     minesweeperController.time_left.setText("Time left: " + String.valueOf(time - now));
-                    if (time - now <= 0) lost();
+                    if (time - now <= 0) lost_time();
 
                 }
             };
@@ -111,19 +116,23 @@ public class Game {
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
                 if (grid[x][y].gethasMine()) {
-                    grid[x][y].open();
+                    grid[x][y].spoil();
+
 
                 }
             }
         }
+        lost();
     }
 
     public int getTries() {
         return tries;
     }
+
     public int getTime() {
         return time;
     }
+
     public int getMinesMarked() {
         return minesMarked;
     }
@@ -145,8 +154,13 @@ public class Game {
     public void lost() {
         timer.stop();
         timer = null;
-
         minesweeperController.game_lost();
+    }
+
+    public void lost_time() {
+        timer.stop();
+        timer = null;
+        minesweeperController.game_lost_time();
     }
 
     public int getSize() {
@@ -166,9 +180,6 @@ public class Game {
         opened++;
     }
 
-    public void subOpened() {
-        opened--;
-    }
 
     public int getOpened() {
         return opened;
@@ -185,8 +196,8 @@ public class Game {
                     int adjMines = 0;
                     for (int xoff = -1; xoff <= 1; xoff++) {
                         for (int yoff = -1; yoff <= 1; yoff++) {
-                            int newx = cell.getX() + xoff;
-                            int newy = cell.getY() + yoff;
+                            int newx = x + xoff;
+                            int newy = y + yoff;
                             if (newx >= 0 && newx < size && newy >= 0 && newy < size && !(xoff == 0 && yoff == 0)) {
                                 if (grid[newx][newy].gethasMine()) ++adjMines;
                             }

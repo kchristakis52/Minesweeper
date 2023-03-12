@@ -13,7 +13,7 @@ public class MinesweeperApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MinesweeperApplication.class.getResource("minesweeper-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 720, 720);
+        Scene scene = new Scene(fxmlLoader.load(), 840, 970);
         stage.setTitle("Medialab Minesweeper");
         stage.setScene(scene);
         //stage.setResizable(false);

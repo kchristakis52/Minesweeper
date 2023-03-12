@@ -1,10 +1,26 @@
 package com.example.minesweeper;
 
 public class PastGame {
-    private int totalMines;
-    private int totalTries;
-    private int time;
-    private boolean win;
+    public int getTotalMines() {
+        return totalMines;
+    }
+
+    public int getTotalTries() {
+        return totalTries;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public boolean isWin() {
+        return win;
+    }
+
+    private final int totalMines;
+    private final int totalTries;
+    private final int time;
+    private final boolean win;
 
     public PastGame(Game game, boolean win) {
         this.totalMines = game.gettotalMines();

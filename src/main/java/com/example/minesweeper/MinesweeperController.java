@@ -13,15 +13,18 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Scanner;
 
 
 public class MinesweeperController {
     private Game current_game;
-    private Fifo<PastGame> past_games= new Fifo<>(5) ;
+    private final Fifo<PastGame> past_games = new Fifo<>(5);
     private boolean correct = false;
     public MenuItem menu_start;
     private int minesNum;
@@ -66,7 +69,7 @@ public class MinesweeperController {
 
     @FXML
     private void menu_solution_action(ActionEvent actionEvent) {
-        current_game.reveal();
+        if (current_game != null) current_game.reveal();
     }
 
 
@@ -76,6 +79,29 @@ public class MinesweeperController {
         Stage stage = (Stage) anchor.getScene().getWindow();
         FileChooser fileChooser = new FileChooser();
         File selected = fileChooser.showOpenDialog(stage);
+        Path path = selected.toPath();
+
+        long lines = 0;
+        try {
+
+            lines = Files.lines(path).count();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            if (lines != 4) {
+                throw new InvalidDescriptionException("Invalid Description");
+            }
+        } catch (InvalidDescriptionException e) {
+            correct = false;
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("The description is invalid. Load another description.");
+            alert.showAndWait();
+            return;
+        }
         try {
             Scanner scanner = new Scanner(selected);
 
@@ -94,10 +120,14 @@ public class MinesweeperController {
             correct = true;
             total_mines.setText("Total Mines: " + minesNum);
             time_left.setText("Time left: " + time);
-            Marked_mines.setText("");
+            //Marked_mines.setText("");
         } catch (Exception e) {
-            total_mines.setText("Error: Invalid values");
             correct = false;
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("The description contains invalid values. Load another description.");
+            alert.showAndWait();
         }
     }
 
@@ -109,14 +139,33 @@ public class MinesweeperController {
             Marked_mines.setText("Marked mines: " + current_game.getMinesMarked());
             for (int x = 0; x < current_game.getSize(); x++) {
                 for (int y = 0; y < current_game.getSize(); y++) {
-                    current_game.grid[x][y].setPrefSize(50, 50);
-                    minesgrid.add(current_game.grid[x][y], x, y);
+                    current_game.getGrid()[x][y].setPrefSize(50, 50);
+                    minesgrid.add(current_game.getGrid()[x][y], x, y);
                 }
             }
         }
 
     }
 
+    @FXML
+    private void menu_details_action(ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("detailspopup.fxml"));
+            Parent root1 = (Parent) fxmlLoader.load();
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Last 5 games");
+
+            stage.setScene(new Scene(root1));
+            DetailsController controller = fxmlLoader.getController();
+            controller.init(past_games);
+
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
     public void game_lost() {
@@ -127,6 +176,18 @@ public class MinesweeperController {
         alert.showAndWait();
         past_games.add(new PastGame(current_game, false));
         init_GUI();
+        current_game = null;
+    }
+
+    public void game_lost_time() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Sorry");
+        alert.setHeaderText(null);
+        alert.setContentText("Time's up... Try again!");
+        alert.show();
+        past_games.add(new PastGame(current_game, false));
+        init_GUI();
+        current_game = null;
     }
 
     public void game_won() {
@@ -137,7 +198,7 @@ public class MinesweeperController {
         alert.showAndWait();
         past_games.add(new PastGame(current_game, true));
         init_GUI();
-
+        current_game = null;
     }
 
     private void init_GUI() {
